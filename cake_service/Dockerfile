@@ -11,7 +11,7 @@ ENV GO111MODULE=on
 COPY . .
 
 RUN go mod download
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o waracle-cake-service
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o cake-service
 
 # Run container
 FROM alpine:latest
@@ -20,7 +20,11 @@ RUN apk --no-cache add ca-certificates
 
 RUN mkdir /app
 WORKDIR /app
-COPY --from=builder /app/waracle-cake-service .
 
-CMD ["./waracle-cake-service"]
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.2.1/wait .
+RUN chmod +x ./wait
+
+COPY --from=builder /app/cake-service .
+
+CMD ./wait && ./cake-service
 

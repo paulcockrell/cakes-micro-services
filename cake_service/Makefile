@@ -1,8 +1,8 @@
 GOPATH:=$(shell go env GOPATH)
 .PHONY: build
 build:
-	CGO_ENABLED=0 go build -o waracle-cake-service *.go
+	CGO_ENABLED=0 go build -o cake-service *.go
 
 .PHONY: docker
 docker:
-	docker build . -t waracle-cake-service:latest
+	docker build . -t cake-service:latest
