@@ -17,22 +17,62 @@ func (h *Handler) Create(ctx *gin.Context) {
 	var cake repository.Cake
 	ctx.BindJSON(&cake)
 
-	if err := h.Repository.Create(ctx, &cake); err != nil {
-		ctx.AbortWithStatus(http.StatusNotFound)
+	err := h.Repository.Create(ctx, &cake)
+	if err != nil {
+		ctx.Error(err)
 		fmt.Println(err)
 	}
 
 	ctx.JSON(http.StatusOK, cake)
 }
 
+// GetAll - Get all cakes
 func (h *Handler) GetAll(ctx *gin.Context) {
-	var cakes []*repository.Cake
 	cakes, err := h.Repository.GetAll(ctx)
 	if err != nil {
-		ctx.AbortWithStatus(http.StatusInternalServerError)
+		ctx.Error(err)
 		fmt.Println(err)
 		return
 	}
 
 	ctx.JSON(http.StatusOK, cakes)
+}
+
+// Get - Get cake by ID
+func (h *Handler) Get(ctx *gin.Context) {
+	cake, err := h.Repository.Get(ctx, ctx.Param("id"))
+	if err != nil {
+		ctx.Error(err)
+		fmt.Println(err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, cake)
+}
+
+// Update - Update cake
+func (h *Handler) Update(ctx *gin.Context) {
+	var cake repository.Cake
+	ctx.BindJSON(&cake)
+
+	updatedCake, err := h.Repository.Update(ctx, ctx.Param("id"), &cake)
+	if err != nil {
+		ctx.Error(err)
+		fmt.Println(err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, updatedCake)
+}
+
+// Delete - Delete a cake
+func (h *Handler) Delete(ctx *gin.Context) {
+	err := h.Repository.Delete(ctx, ctx.Param("id"))
+	if err != nil {
+		ctx.Error(err)
+		fmt.Println(err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, nil)
 }

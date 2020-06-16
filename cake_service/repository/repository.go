@@ -2,14 +2,19 @@ package repository
 
 import (
 	"context"
+	"errors"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type Repository interface {
 	Create(ctx context.Context, cake *Cake) error
 	GetAll(ctx context.Context) ([]*Cake, error)
+	Get(ctx context.Context, id string) (*Cake, error)
+	Update(ctx context.Context, id string, cake *Cake) (*Cake, error)
+	Delete(ctx context.Context, id string) error
 }
 
 type MongoRepository struct {
@@ -18,11 +23,11 @@ type MongoRepository struct {
 
 // Cake - cake definition
 type Cake struct {
-	ID        string `json:"id"`
-	Name      string `json:"name"`
-	Comment   string `json:"comment"`
-	ImageURL  string `json:"image_url"`
-	YumFactor int8   `json:"yum_factor"`
+	ID        primitive.ObjectID `json:"id" bson:"_id"`
+	Name      string             `json:"name" bson:"name"`
+	Comment   string             `json:"comment" bson:"comment"`
+	ImageURL  string             `json:"image_url" bson:"image_url"`
+	YumFactor int8               `json:"yum_factor" bson:"yum_factor"`
 }
 
 // Create - Create a new cake record
@@ -48,4 +53,65 @@ func (r *MongoRepository) GetAll(ctx context.Context) ([]*Cake, error) {
 	}
 
 	return cakes, nil
+}
+
+// Get - Get on cake by ID
+func (r *MongoRepository) Get(ctx context.Context, id string) (*Cake, error) {
+	var cake Cake
+	docID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	filter := bson.M{"_id": docID}
+	err = r.Collection.FindOne(ctx, filter).Decode(&cake)
+	if err != nil {
+		return nil, err
+	}
+
+	return &cake, nil
+}
+
+// Update - Update cake
+func (r *MongoRepository) Update(ctx context.Context, id string, cake *Cake) (*Cake, error) {
+	docID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	res, err := r.Collection.UpdateOne(
+		ctx,
+		bson.M{"_id": docID},
+		bson.D{
+			{"$set", bson.D{
+				{"name", cake.Name},
+				{"yum_factor", cake.YumFactor},
+				{"comment", cake.Comment},
+				{"image_url", cake.ImageURL},
+			}},
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
+	if res.ModifiedCount < 1 {
+		return nil, errors.New("No record found to update")
+	}
+
+	return cake, nil
+}
+
+// Delete - Delete cake by ID
+func (r *MongoRepository) Delete(ctx context.Context, id string) error {
+	docID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	_, err = r.Collection.DeleteOne(ctx, bson.M{"_id": docID})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

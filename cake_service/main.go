@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/paulcockrell/waracle-cake-service/handler"
@@ -31,7 +32,12 @@ func main() {
 	}
 
 	// Setup database
-	client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(dbURI))
+	client, err := mongo.NewClient(options.Client().ApplyURI(dbURI))
+	if err != nil {
+		log.Fatal(err)
+	}
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	err = client.Connect(ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -45,7 +51,10 @@ func main() {
 	// Define API endpoints
 	g := gin.Default()
 	g.GET("/cakes", h.GetAll)
+	g.GET("/cakes/:id", h.Get)
 	g.POST("/cakes", h.Create)
+	g.PUT("/cakes/:id", h.Update)
+	g.DELETE("/cakes/:id", h.Delete)
 
 	// Go!
 	log.Println(fmt.Sprintf("Super dooper cake API server listening at %v", appPort))
