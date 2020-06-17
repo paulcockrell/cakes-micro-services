@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/paulcockrell/waracle-cake-service/handler"
 	"github.com/paulcockrell/waracle-cake-service/repository"
@@ -18,6 +19,7 @@ const (
 
 func setupRouter(h *handler.Handler) *gin.Engine {
 	r := gin.Default()
+	r.Use(cors.Default())
 	r.GET("/cakes", h.GetAll)
 	r.GET("/cakes/:id", h.Get)
 	r.POST("/cakes", h.Create)
