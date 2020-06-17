@@ -6,8 +6,8 @@ class Table extends Component {
     const cakes = this.props.cakes.map(cake => {
       return (
         <Media>
-          <Media left href="#">
-            <Media object data-src={ cake.image_url } alt={ cake.name } />
+          <Media left>
+            <Media object src={ cake.image_url } alt={ cake.name } width="64" height="64" />
           </Media>
           <Media body>
             <Media heading>
