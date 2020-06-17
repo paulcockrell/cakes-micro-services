@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Container, Row, Col } from 'reactstrap'
+import { Container, Row, Col, Button } from 'reactstrap'
+import { Link } from 'react-router-dom'
 import Table from './Components/Table'
 import './App.css'
 
@@ -14,12 +15,6 @@ class App extends Component {
       .then(response => response.json())
       .then(cakes => this.setState({ cakes }))
       .catch(err => console.log(err))
-  }
-
-  addCakeToState = (cake) => {
-    this.setState(prevState => ({
-      cakes: [...prevState.cakes, cake]
-    }))
   }
 
   componentDidMount() {
@@ -39,6 +34,12 @@ class App extends Component {
         <Row>
           <Col>
             <Table cakes={ cakes } />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Button color="primary">Add a cake</Button>{' '}
+            <Link to="/cake/new">Add a cake</Link>
           </Col>
         </Row>
       </Container>

@@ -1,13 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 import './index.css';
 import App from './App';
+import Create from './Components/Create';
+import Show from './Components/Show';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Router>
+      <Route exact path="/" component={ App } />
+      <Route path="/create" component={ Create } />
+      <Route path="/show/:id" component={ Show } />
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );
