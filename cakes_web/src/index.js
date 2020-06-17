@@ -5,6 +5,7 @@ import './index.css';
 import App from './App';
 import Create from './Components/Create';
 import Show from './Components/Show';
+import Edit from './Components/Edit';
 import * as serviceWorker from './serviceWorker';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -14,6 +15,7 @@ ReactDOM.render(
       <Route exact path="/" component={ App } />
       <Route path="/create" component={ Create } />
       <Route path="/show/:id" component={ Show } />
+      <Route path="/edit/:id" component={ Edit } />
     </Router>
   </React.StrictMode>,
   document.getElementById('root')

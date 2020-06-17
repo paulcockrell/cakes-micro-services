@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { Container, Row, Col, Form, Button, FormGroup, Label, Input, FormText } from 'reactstrap'
 import { Link } from 'react-router-dom'
 
-class Create extends Component {
+class Edit extends Component {
   state = {
+      id: 0,
       name: '',
       comment: '',
       imageUrl: '',
@@ -14,20 +15,35 @@ class Create extends Component {
       this.setState({ [e.target.name]: e.target.value })
   }
 
-  createCake = () => {
-      const { name, comment, imageUrl, yumFactor } = this.state
-      fetch(`http://localhost:8080/cakes`, {
-          method: 'POST',
+  getCake = (id) => {
+    // TODO: Use environment variable for api endpoint
+    fetch(`http://localhost:8080/cakes/${id}`)
+      .then(response => response.json())
+      .then(cake => {
+          const { id, name, comment, imageUrl, yumFactor } = cake
+          this.setState({ id, name, comment, imageUrl, yumFactor: yumFactor })
+      })
+      .catch(err => console.log(err))
+  }
+
+  updateCake = () => {
+      const { id, name, comment, imageUrl, yumFactor } = this.state
+      fetch(`http://localhost:8080/cakes/${id}`, {
+          method: 'PUT',
           body: JSON.stringify({ name, comment, imageUrl, yumFactor: Number(yumFactor) }),
       })
-      .then(rsp => rsp.json())
-      .then(cake => this.props.history.push(`/show/${cake.id}`))
+      .then(_ => this.props.history.push(`/show/${id}`) )
       .catch(err => console.log(err))
   }
 
   handleSubmit = (evt) => {
       evt.preventDefault()
-      this.createCake()
+      this.updateCake()
+  }
+
+  componentDidMount() {
+    const { id } = this.props.match.params
+    this.getCake(id)
   }
 
   render() {
@@ -37,7 +53,7 @@ class Create extends Component {
         <Container>
             <Row>
                 <Col>
-                    <h1>Create Cake</h1>
+                    <h1>Edit Cake</h1>
                 </Col>
             </Row>
             <Row>
@@ -74,4 +90,4 @@ class Create extends Component {
   }
 }
 
-export default Create
+export default Edit

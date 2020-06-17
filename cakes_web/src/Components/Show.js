@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Container, Row, Col, Media } from 'reactstrap'
+import { Container, Row, Col, Media, Button } from 'reactstrap'
 import { Link } from 'react-router-dom'
 
 class Show extends Component {
@@ -44,7 +44,8 @@ class Show extends Component {
                 ID: { cake.id } <br/>
                 Name: { cake.name } <br/>
                 Comment: { cake.comment } <br/>
-                Yum factor { cake.yum_factor } <br/>
+                Yum factor: { cake.yumFactor } <br/>
+                <Link to={`/edit/${cake.id}`}>Edit</Link>
                 <Link to="/">Back</Link>
               </Media>
             </Media>

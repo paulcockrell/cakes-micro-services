@@ -39,7 +39,7 @@ class App extends Component {
         <Row>
           <Col>
             <Button color="primary">Add a cake</Button>{' '}
-            <Link to="/cake/new">Add a cake</Link>
+            <Link to="/create">Add a cake</Link>
           </Col>
         </Row>
       </Container>
