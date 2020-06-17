@@ -15,12 +15,16 @@ type Handler struct {
 // Create - Create cake action
 func (h *Handler) Create(ctx *gin.Context) {
 	var cake repository.Cake
-	ctx.BindJSON(&cake)
-
-	err := h.Repository.Create(ctx, &cake)
+	err := ctx.BindJSON(&cake)
 	if err != nil {
-		ctx.Error(err)
-		fmt.Println(err)
+		ctx.AbortWithError(http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	err = h.Repository.Create(ctx, &cake)
+	if err != nil {
+		ctx.AbortWithError(http.StatusInternalServerError, err)
+		return
 	}
 
 	ctx.JSON(http.StatusOK, cake)
@@ -31,7 +35,6 @@ func (h *Handler) GetAll(ctx *gin.Context) {
 	cakes, err := h.Repository.GetAll(ctx)
 	if err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, err)
-		fmt.Println(err)
 		return
 	}
 
@@ -42,8 +45,7 @@ func (h *Handler) GetAll(ctx *gin.Context) {
 func (h *Handler) Get(ctx *gin.Context) {
 	cake, err := h.Repository.Get(ctx, ctx.Param("id"))
 	if err != nil {
-		ctx.Error(err)
-		fmt.Println(err)
+		ctx.AbortWithError(http.StatusNotFound, err)
 		return
 	}
 

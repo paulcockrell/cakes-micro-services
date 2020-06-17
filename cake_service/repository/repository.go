@@ -12,7 +12,7 @@ import (
 
 // Cake - cake definition
 type Cake struct {
-	ID        primitive.ObjectID `json:"id" bson:"_id"`
+	ID        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
 	Name      string             `json:"name" bson:"name"`
 	Comment   string             `json:"comment" bson:"comment"`
 	ImageURL  string             `json:"image_url" bson:"image_url"`
@@ -52,8 +52,13 @@ func (r *MongoRepository) Setup(ctx context.Context, dbURI, db, collection strin
 
 // Create - Create a new cake record
 func (r *MongoRepository) Create(ctx context.Context, cake *Cake) error {
-	_, err := r.Collection.InsertOne(ctx, cake)
-	return err
+	res, err := r.Collection.InsertOne(ctx, cake)
+	if err != nil {
+		return err
+	}
+
+	cake.ID = res.InsertedID.(primitive.ObjectID)
+	return nil
 }
 
 // GetAll - Get all cake records

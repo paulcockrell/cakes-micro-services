@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -56,6 +58,42 @@ func TestGetNonExistentCake(t *testing.T) {
 	assert.Equal(t, http.StatusNotFound, rsp.Code)
 }
 
+func TestGetCake(t *testing.T) {
+	clearCakes()
+	cakes := addCakes(1)
+
+	url := fmt.Sprintf("/cakes/%s", cakes[0].ID.Hex())
+	req, _ := http.NewRequest("GET", url, nil)
+	rsp := executeRequest(req)
+
+	var cake repository.Cake
+	json.Unmarshal(rsp.Body.Bytes(), &cake)
+
+	assert.Equal(t, http.StatusOK, rsp.Code)
+	assert.Equal(t, cakes[0], &cake)
+
+}
+
+func TestCreateCake(t *testing.T) {
+	clearCakes()
+
+	var jsonStr = []byte(`{"name":"Cake","comment":"Comment","image_url":"ImgURL","yum_factor":10}`)
+	req, _ := http.NewRequest("POST", "/cakes", bytes.NewBuffer(jsonStr))
+	req.Header.Set("Content-Type", "application/json")
+	rsp := executeRequest(req)
+
+	assert.Equal(t, http.StatusOK, rsp.Code)
+
+	var cake repository.Cake
+	json.Unmarshal(rsp.Body.Bytes(), &cake)
+
+	assert.NotNil(t, cake.ID)
+	assert.Equal(t, "Cake", cake.Name)
+	assert.Equal(t, "Comment", cake.Comment)
+	assert.Equal(t, "ImgURL", cake.ImageURL)
+	assert.Equal(t, int8(10), cake.YumFactor)
+}
+
 func executeRequest(req *http.Request) *httptest.ResponseRecorder {
 	router := setupRouter(h)
 	rr := httptest.NewRecorder()
@@ -68,11 +106,16 @@ func clearCakes() {
 	repo.Collection.Drop(context.TODO())
 }
 
-func addCakes(count int) {
+func addCakes(count int) []*repository.Cake {
+	var cakes []*repository.Cake
+
 	for i := 0; i < count; i++ {
 		cake := generateCake(i)
 		h.Repository.Create(context.TODO(), &cake)
+		cakes = append(cakes, &cake)
 	}
+
+	return cakes
 }
 
 func generateCake(id int) repository.Cake {
