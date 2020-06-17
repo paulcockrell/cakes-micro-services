@@ -94,6 +94,33 @@ func TestCreateCake(t *testing.T) {
 	assert.Equal(t, int8(10), cake.YumFactor)
 }
 
+func TestUpdateCake(t *testing.T) {
+	clearCakes()
+	cakes := addCakes(1)
+
+	// Update cake
+	var jsonStr = []byte(`{"name":"Updated name","comment":"Updated comment","image_url":"Updated ImgURL","yum_factor":1}`)
+	url := fmt.Sprintf("/cakes/%s", cakes[0].ID.Hex())
+	req, _ := http.NewRequest("PUT", url, bytes.NewBuffer(jsonStr))
+	req.Header.Set("Content-Type", "application/json")
+	rsp := executeRequest(req)
+
+	assert.Equal(t, http.StatusOK, rsp.Code)
+
+	// Get updated cake
+	req, _ = http.NewRequest("GET", url, nil)
+	rsp = executeRequest(req)
+
+	var cake repository.Cake
+	json.Unmarshal(rsp.Body.Bytes(), &cake)
+
+	assert.Equal(t, cakes[0].ID, cake.ID)
+	assert.Equal(t, "Updated name", cake.Name)
+	assert.Equal(t, "Updated comment", cake.Comment)
+	assert.Equal(t, "Updated ImgURL", cake.ImageURL)
+	assert.Equal(t, int8(1), cake.YumFactor)
+}
+
 func executeRequest(req *http.Request) *httptest.ResponseRecorder {
 	router := setupRouter(h)
 	rr := httptest.NewRecorder()
