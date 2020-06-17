@@ -33,7 +33,7 @@ class Edit extends Component {
           body: JSON.stringify({ name, comment, imageUrl, yumFactor: Number(yumFactor) }),
       })
       .then(_ => this.props.history.push(`/show/${id}`) )
-      .catch(err => console.log(err))
+      .catch(err => console.error("Error editing cake", err))
   }
 
   handleSubmit = (evt) => {

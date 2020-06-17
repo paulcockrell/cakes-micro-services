@@ -38,7 +38,6 @@ class App extends Component {
         </Row>
         <Row>
           <Col>
-            <Button color="primary">Add a cake</Button>{' '}
             <Link to="/create">Add a cake</Link>
           </Col>
         </Row>

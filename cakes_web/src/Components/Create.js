@@ -22,7 +22,7 @@ class Create extends Component {
       })
       .then(rsp => rsp.json())
       .then(cake => this.props.history.push(`/show/${cake.id}`))
-      .catch(err => console.log(err))
+      .catch(err => console.error("Error creating cake", err))
   }
 
   handleSubmit = (evt) => {

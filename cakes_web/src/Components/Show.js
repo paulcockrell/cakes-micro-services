@@ -15,6 +15,14 @@ class Show extends Component {
       .catch(err => console.log(err))
   }
 
+  deleteCake = (id) => {
+    fetch(`http://localhost:8080/cakes/${id}`, {
+      method: 'DELETE'
+    })
+    .then(_ => this.props.history.push("/"))
+    .catch(err => console.error("Error deleting cake", err))
+  }
+
   componentDidMount() {
     const { id } = this.props.match.params
     this.getCake(id)
@@ -46,6 +54,7 @@ class Show extends Component {
                 Comment: { cake.comment } <br/>
                 Yum factor: { cake.yumFactor } <br/>
                 <Link to={`/edit/${cake.id}`}>Edit</Link>
+                <Button onClick={ this.deleteCake.bind(this, cake.id) }>Delete</Button>
                 <Link to="/">Back</Link>
               </Media>
             </Media>
