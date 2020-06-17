@@ -46,7 +46,11 @@ func TestGetAll(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/cakes", nil)
 	rsp := executeRequest(req)
 
+	var cakes []repository.Cake
+	json.Unmarshal(rsp.Body.Bytes(), &cakes)
+
 	assert.Equal(t, http.StatusOK, rsp.Code)
+	assert.Equal(t, 2, len(cakes))
 }
 
 func TestGetNonExistentCake(t *testing.T) {
@@ -119,6 +123,24 @@ func TestUpdateCake(t *testing.T) {
 	assert.Equal(t, "Updated comment", cake.Comment)
 	assert.Equal(t, "Updated ImgURL", cake.ImageURL)
 	assert.Equal(t, int8(1), cake.YumFactor)
+}
+
+func TestDeleteCake(t *testing.T) {
+	clearCakes()
+	cakes := addCakes(1)
+
+	// Delete cake
+	url := fmt.Sprintf("/cakes/%s", cakes[0].ID.Hex())
+	req, _ := http.NewRequest("DELETE", url, nil)
+	rsp := executeRequest(req)
+
+	assert.Equal(t, http.StatusOK, rsp.Code)
+
+	// Confirm record no longer exists
+	req, _ = http.NewRequest("GET", url, nil)
+	rsp = executeRequest(req)
+
+	assert.Equal(t, http.StatusNotFound, rsp.Code)
 }
 
 func executeRequest(req *http.Request) *httptest.ResponseRecorder {
