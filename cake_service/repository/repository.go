@@ -7,7 +7,17 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
+
+// Cake - cake definition
+type Cake struct {
+	ID        primitive.ObjectID `json:"id" bson:"_id"`
+	Name      string             `json:"name" bson:"name"`
+	Comment   string             `json:"comment" bson:"comment"`
+	ImageURL  string             `json:"image_url" bson:"image_url"`
+	YumFactor int8               `json:"yum_factor" bson:"yum_factor"`
+}
 
 type Repository interface {
 	Create(ctx context.Context, cake *Cake) error
@@ -18,16 +28,26 @@ type Repository interface {
 }
 
 type MongoRepository struct {
+	Client     *mongo.Client
 	Collection *mongo.Collection
 }
 
-// Cake - cake definition
-type Cake struct {
-	ID        primitive.ObjectID `json:"id" bson:"_id"`
-	Name      string             `json:"name" bson:"name"`
-	Comment   string             `json:"comment" bson:"comment"`
-	ImageURL  string             `json:"image_url" bson:"image_url"`
-	YumFactor int8               `json:"yum_factor" bson:"yum_factor"`
+// Setup - Establish connection with MonogoDB
+func (r *MongoRepository) Setup(ctx context.Context, dbURI, db, collection string) error {
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(dbURI))
+	if err != nil {
+		return err
+	}
+
+	err = client.Ping(ctx, nil)
+	if err != nil {
+		return err
+	}
+
+	r.Client = client
+	r.Collection = client.Database(db).Collection(collection)
+
+	return nil
 }
 
 // Create - Create a new cake record

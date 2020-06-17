@@ -30,7 +30,7 @@ func (h *Handler) Create(ctx *gin.Context) {
 func (h *Handler) GetAll(ctx *gin.Context) {
 	cakes, err := h.Repository.GetAll(ctx)
 	if err != nil {
-		ctx.Error(err)
+		ctx.AbortWithError(http.StatusInternalServerError, err)
 		fmt.Println(err)
 		return
 	}
