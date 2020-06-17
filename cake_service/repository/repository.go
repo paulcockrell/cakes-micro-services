@@ -15,8 +15,8 @@ type Cake struct {
 	ID        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
 	Name      string             `json:"name" bson:"name"`
 	Comment   string             `json:"comment" bson:"comment"`
-	ImageURL  string             `json:"image_url" bson:"image_url"`
-	YumFactor int8               `json:"yum_factor" bson:"yum_factor"`
+	ImageURL  string             `json:"imageUrl" bson:"imageUrl"`
+	YumFactor int8               `json:"yumFactor" bson:"yumFactor"`
 }
 
 type Repository interface {
@@ -110,9 +110,9 @@ func (r *MongoRepository) Update(ctx context.Context, id string, cake *Cake) (*C
 		bson.D{
 			{"$set", bson.D{
 				{"name", cake.Name},
-				{"yum_factor", cake.YumFactor},
+				{"yumFactor", cake.YumFactor},
 				{"comment", cake.Comment},
-				{"image_url", cake.ImageURL},
+				{"imageUrl", cake.ImageURL},
 			}},
 		},
 	)
@@ -120,9 +120,10 @@ func (r *MongoRepository) Update(ctx context.Context, id string, cake *Cake) (*C
 		return nil, err
 	}
 	if res.ModifiedCount < 1 {
-		return nil, errors.New("No record found to update")
+		return nil, errors.New("No record found to update, or nothing to update")
 	}
 
+	cake.ID = docID
 	return cake, nil
 }
 
