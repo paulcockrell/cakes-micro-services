@@ -4,5 +4,5 @@ build:
 	yarn build
 
 docker:
-	docker build -t cake_web:latest .
+	docker build -t cake-web:latest .
 
