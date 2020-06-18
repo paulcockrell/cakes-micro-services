@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Container, Row, Col, Form, Button, FormGroup, Label, Input } from 'reactstrap'
 import { Link } from 'react-router-dom'
 
+const endpoint = process.env.REACT_APP_API_ENDPOINT || "http://localhost:8080/cakes"
+
 class Edit extends Component {
   state = {
       id: 0,
@@ -17,7 +19,7 @@ class Edit extends Component {
 
   getCake = (id) => {
     // TODO: Use environment variable for api endpoint
-    fetch(`http://localhost:8080/cakes/${id}`)
+    fetch(`${endpoint}/${id}`)
       .then(response => response.json())
       .then(cake => {
           const { id, name, comment, imageUrl, yumFactor } = cake
@@ -28,7 +30,7 @@ class Edit extends Component {
 
   updateCake = () => {
       const { id, name, comment, imageUrl, yumFactor } = this.state
-      fetch(`http://localhost:8080/cakes/${id}`, {
+      fetch(`${endpoint}/${id}`, {
           method: 'PUT',
           body: JSON.stringify({ name, comment, imageUrl, yumFactor: Number(yumFactor) }),
       })

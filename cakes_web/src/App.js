@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 import Table from './Components/Table'
 import './App.css'
 
+const endpoint = process.env.REACT_APP_API_ENDPOINT || "http://localhost:8080/cakes"
+
 class App extends Component {
   state = {
     cakes: [],
@@ -11,7 +13,7 @@ class App extends Component {
 
   getCakes = () => {
     // TODO: Use environment variable for api endpoint
-    fetch("http://localhost:8080/cakes")
+    fetch(endpoint)
       .then(response => response.json())
       .then(cakes => this.setState({ cakes }))
       .catch(err => console.log(err))

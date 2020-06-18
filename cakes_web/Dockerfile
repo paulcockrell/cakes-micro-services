@@ -9,6 +9,7 @@ RUN npm install --silent
 RUN npm install react-scripts@3.4.1 -g --silent
 
 COPY . ./
+ENV REACT_APP_API_ENDPOINT http://lvh.me/api/cakes
 RUN yarn build
 
 FROM nginx:stable-alpine

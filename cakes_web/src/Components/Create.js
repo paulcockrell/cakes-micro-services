@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Container, Row, Col, Form, Button, FormGroup, Label, Input } from 'reactstrap'
 import { Link } from 'react-router-dom'
 
+const endpoint = process.env.REACT_APP_API_ENDPOINT || "http://localhost:8080/cakes"
+
 class Create extends Component {
   state = {
     name: '',
@@ -16,7 +18,7 @@ class Create extends Component {
 
   createCake = () => {
     const { name, comment, imageUrl, yumFactor } = this.state
-    fetch(`http://localhost:8080/cakes`, {
+    fetch(endpoint, {
       method: 'POST',
       body: JSON.stringify({ name, comment, imageUrl, yumFactor: Number(yumFactor) }),
     })

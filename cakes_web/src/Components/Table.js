@@ -4,7 +4,8 @@ import { Media } from 'reactstrap'
 
 class Table extends Component {
   render() {
-    const cakes = this.props.cakes.map(cake => {
+    const cakes = this.props.cakes || []
+    const cakesTable = cakes.map(cake => {
       return (
         <Media key={ cake.id }>
           <Media left>
@@ -22,7 +23,7 @@ class Table extends Component {
 
     return (
       <div>
-        { cakes }
+        { cakesTable }
       </div>
     )
   }

@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import { Container, Row, Col, Media, Button } from 'reactstrap'
 import { Link } from 'react-router-dom'
 
+const endpoint = process.env.REACT_APP_API_ENDPOINT || "http://localhost:8080/cakes"
+
 class Show extends Component {
   state = {
     cake: null,
@@ -9,14 +11,14 @@ class Show extends Component {
 
   getCake = (id) => {
     // TODO: Use environment variable for api endpoint
-    fetch(`http://localhost:8080/cakes/${id}`)
+    fetch(`${endpoint}/${id}`)
       .then(response => response.json())
       .then(cake => this.setState({ cake }))
       .catch(err => console.log(err))
   }
 
   deleteCake = (id) => {
-    fetch(`http://localhost:8080/cakes/${id}`, {
+    fetch(`${endpoint}/${id}`, {
       method: 'DELETE'
     })
     .then(_ => this.props.history.push("/"))
