@@ -29,6 +29,8 @@ class App extends Component {
         <Row>
           <Col>
             <h1>Waracle Cake PWA</h1>
+            <h2>All cakes</h2>
+            <hr />
           </Col>
         </Row>
         <Row>
@@ -38,7 +40,8 @@ class App extends Component {
         </Row>
         <Row>
           <Col>
-            <Link to="/create">Add a cake</Link>
+            <hr />
+            <Button tag={Link} to="/create" color="primary">Create a new cake</Button>
           </Col>
         </Row>
       </Container>

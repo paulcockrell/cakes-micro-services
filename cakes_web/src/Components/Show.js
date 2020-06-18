@@ -36,28 +36,41 @@ class Show extends Component {
       <Container className="App">
         <Row>
           <Col>
-            <h1>Viewing cake ID {cake.id}</h1>
+            <h1>Waracle Cake PWA</h1>
+            <h2>Show cake</h2>
+            <hr />
           </Col>
         </Row>
         <Row>
           <Col>
-            <Media key={ cake.id }>
-              <Media left>
-                <Media object src={ cake.image_url } alt={ cake.name } width="400" height="400" />
-              </Media>
-              <Media body>
-                <Media heading>
-                  { cake.name }
-                </Media>
-                ID: { cake.id } <br/>
-                Name: { cake.name } <br/>
-                Comment: { cake.comment } <br/>
-                Yum factor: { cake.yumFactor } <br/>
-                <Link to={`/edit/${cake.id}`}>Edit</Link>
-                <Button onClick={ this.deleteCake.bind(this, cake.id) }>Delete</Button>
-                <Link to="/">Back</Link>
-              </Media>
-            </Media>
+              <Media object src={ cake.imageUrl } alt={ cake.name } width="300" height="300" />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+              ID: { cake.id } <br/>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+              Name: { cake.name } <br/>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+              Comment: { cake.comment } <br/>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+              Yum factor: { cake.yumFactor } <br/>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+              <Button tag={ Link } to={ `/edit/${cake.id}` } color="primary">Edit</Button>{' '}
+              <Button tag={ Link } onClick={ this.deleteCake.bind(this, cake.id) } color="danger">Delete</Button>{' '}
+              <Button tag={ Link } to="/" color="secondary">Back</Button>
           </Col>
         </Row>
       </Container>

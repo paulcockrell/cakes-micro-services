@@ -8,13 +8,13 @@ class Table extends Component {
       return (
         <Media key={ cake.id }>
           <Media left>
-            <Media object src={ cake.image_url } alt={ cake.name } width="64" height="64" />
+            <Media object src={ cake.imageUrl } alt={ cake.name } width="64" height="64" />
           </Media>
           <Media body>
             <Media heading>
               { cake.name }
             </Media>
-            Want to learn more about this lovely cake? <Link to={ `/show/${cake.id}` }>Click here</Link>
+            Want to learn more about this lovely cake? <Link className="button button-primary" to={ `/show/${cake.id}` }>Click here</Link>
           </Media>
         </Media>
       )
