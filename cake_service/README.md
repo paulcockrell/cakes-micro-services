@@ -1,6 +1,7 @@
-# Waracle Cake API
+# Cake Service
 
-Extreemly basic in-memory cake CRUD api.
+Cake service providing typical CRUD API endpoints for managing cake records.
+The service stores data in MongoDB, which must be installed if running this service locally.
 
 *Endpoints:*
 * GET /cakes
@@ -9,27 +10,47 @@ Extreemly basic in-memory cake CRUD api.
 * PUT /cakes/{id}
 * DELETE /cakes/{id}
 
-## Build
-### Local build
+## Development commands
+
+We make use of a `Makefile` found in the root of the project to simply the command for building the service.
+
+### Test
+
+```
+make test
+```
+
+### Build
+
+
+#### Local build
+
 Build a binary, requires Go being installed on your host machine
 ```
 make build
 ```
+
 _or_ 
-### Docker build
+
+#### Docker build
+
 If you have Docker installed, build the binary in an image
 ```
 make docker
 ```
 
-## Run
-Either run the binary created from the `Local build` instruction:
+### Run
+
+Either run the binary created from the `Local build` instruction (requires MongoDB running):
+
 ```
-./waracle-cake-service
+./cake-service
 ```
+
 _or_ if you built the Docker image, run that and map ports
+
 ```
-docker run -p 8080:8080 waracle-cake-service:latest
+docker run -p 80:8080 cake-service:latest
 ```
 
 ## Usage examples
@@ -43,30 +64,30 @@ stored in memory and not persisted between service restarts.
 
 ### Get all cakes
 ```
-curl localhost:8080/cakes
+curl http://localhost/cakes
 ```
 
 ### Get a cake
 ```
-curl localhost:8080/cakes/1
+curl http://localhost:80/cakes/1
 ```
 
 ### Create a cake
 ```
 curl -XPOST -H 'Content-Type: application/json' \
      -d '{ "name": "Slimey Cake","comment": "Slippy","yum_factor": 5, "image_url": "/cake.pic.jpg" }' \
-     http://localhost:8080/cakes
+     http://localhost/cakes
 ```
 
 ### Update a cake
 ```
 curl -XPUT -H 'Content-Type: application/json' \
      -d '{ "name": "Triangle Donut","comment": "Amazing concept","yum_factor": 2, "image_url": "/triangle.pic.jpg"}' \
-     http://localhost:8080/cakes/1
+     http://localhost/cakes/1
 ```
 
 ### Delete a cake
 ```
 curl -XDELETE -H 'Content-Type: application/json' \
-     http://localhost:8080/cakes/1
+     http://localhost/cakes/1
 ```
