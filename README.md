@@ -43,7 +43,8 @@ Make sure you have `docker` and `docker-compose` installed.
 docker-compose up
 ```
 
-Once booted, you can access the web interface at `http://localhost`
+Once booted, you can access the web interface at `http://lvh.me/`
+If you want to directly access the api service you can reach that at `http://lvh.me/api/cakes`
 
 ### Futher reading
 
